@@ -84,5 +84,5 @@ async def get_status(ctx, arg=None):
 scrape.start()
 from dotenv import load_dotenv
 load_dotenv()
-bot.run(os.getenv('TOKEN'))
+bot.run(os.environ["TOKEN"])
 
