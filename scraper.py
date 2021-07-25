@@ -12,8 +12,6 @@ def scrapeServerStatus (SERVER_NAME='Atlantis'):
 
     list = soup.find("div", attrs={'class':'ags-ServerStatus-content-responses-response ags-ServerStatus-content-responses-response--centered ags-js-serverResponse is-active', })
     servers = list.find_all("div", class_="ags-ServerStatus-content-responses-response-server")
-    statUp = servers[1].find("div", attrs={'class':'ags-ServerStatus-content-responses-response-server-status--up'})
-    statDown = servers[1].find("div", attrs={'class':'ags-ServerStatus-content-responses-response-server-status--down'})
 
     for server in servers:
         for string in server.strings:
@@ -21,17 +19,40 @@ def scrapeServerStatus (SERVER_NAME='Atlantis'):
                 statUp = server.find("div", attrs={'class':'ags-ServerStatus-content-responses-response-server-status--up'})
                 statDown = server.find("div", attrs={'class':'ags-ServerStatus-content-responses-response-server-status--down'})
                 serverStatus = 'Server not found'
-                if (statUp == None):
+                if (statDown != None):
                     print('Server Down - ', SERVER_NAME)
                     serverStatus = 'The server is down'
-                else:
+                elif (statUp != None):
                     print('Server Up - ', SERVER_NAME)
                     serverStatus = 'The server is up'
                 return serverStatus
-            else:
-                continue
+    return 'Server not found'
 
+def scrapeEast():
+    page = requests.get(url, headers=headers)
+    soup = BeautifulSoup(page.content, 'html.parser')
 
+    list = soup.find("div", attrs={'class':'ags-ServerStatus-content-responses-response ags-ServerStatus-content-responses-response--centered ags-js-serverResponse is-active', })
+    servers = list.find_all("div", class_="ags-ServerStatus-content-responses-response-server")
+    
+    status_dict = {}
+
+    for server in servers:
+        serverName = 'default'
+        for string in server.strings:
+            if len(string.strip()) != 0:
+                serverName = string.strip()
+        statUp = server.find("div", attrs={'class':'ags-ServerStatus-content-responses-response-server-status--up'})
+        statDown = server.find("div", attrs={'class':'ags-ServerStatus-content-responses-response-server-status--down'})
+        serverStatus = 'Server not found'
+        if (statDown != None):
+            serverStatus = 'The server is down'
+        elif (statUp != None):
+            serverStatus = 'The server is up'
+        else:
+            print('no server found')
+        status_dict[serverName] = serverStatus
+    return status_dict
 
 # Server status
 ''' <div class="ags-ServerStatus-content-responses-response ags-ServerStatus-content-responses-response--centered ags-js-serverResponse is-active" data-index="0">
