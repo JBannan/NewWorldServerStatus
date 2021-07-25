@@ -33,7 +33,7 @@ server_name = ''
 global_ctx = None
 east_servers = {}
 
-bot = commands.Bot(command_prefix='~')
+bot = commands.Bot(command_prefix='~', help_command=None)
 
 # Collects online status of all US East servers every 2 minutes
 # If the tracked server is 
@@ -89,10 +89,10 @@ async def get_status(ctx, arg=None):
 
 @bot.command(name='help')
 async def help_user(ctx):
-    helpString = 'Commands:\n\t\"~track [Server Name]\": Set a server to track the status of. If it changes, I will (probably) report it!\n'
+    helpString = '```Commands:\n\t\"~track [Server Name]\": Set a server to track the status of. If it changes, I will (probably) report it!\n'
     helpString += '\t\"~check [Server Name]\": Check the status of a server. This will not start tracking this server.\n'
-    helpString += '\t\"~status\": Get the status of the currently tracked server. Providing a server name will also start tracking that server.\n'
-    await ctx.send('Commands:\n\t\"~track [Server Name]\": Set a server to track the status of. If it changes, I will (probably) report it!\n')
+    helpString += '\t\"~status\": Get the status of the currently tracked server. Providing a server name will also start tracking that server.```'
+    await ctx.send(helpString)
 
 scrape.start()
 from dotenv import load_dotenv
